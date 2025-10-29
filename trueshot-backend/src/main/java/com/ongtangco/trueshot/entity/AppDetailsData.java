@@ -13,18 +13,21 @@ public class AppDetailsData {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "storeName")
     private String storeName;
 
+    @Column(name = "heroMessage")
     private String heroMessage;
 
+    @Column(name = "supportEmail")
     private String supportEmail;
 
+    @Column(name = "supportNumber")
     private String supportNumber;
 
-    @Column(length = 2000)
+    @Column(length = 2000, name = "faqContent")
     private String faqContent;
 
-    @Column(length = 2000)
+    @Column(length = 2000, name = "aboutContent")
     private String aboutContent;
 }

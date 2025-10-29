@@ -25,26 +25,32 @@ public class ProductData {
     @Column(nullable = false)
     private String brand;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "modelName")
     private String modelName;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, name = "conditionGrade")
     private ConditionGrade conditionGrade;
 
     @Column(length = 2000)
     private String description;
 
+    @Column(name = "imageUrl")
     private String imageUrl;
 
+    @Column(name = "lensMount")
     private String lensMount;
 
+    @Column(name = "sensorType")
     private String sensorType;
 
+    @Column(name = "releaseYear")
     private Integer releaseYear;
 
+    @Column(name = "shutterCount")
     private Integer shutterCount;
 
+    @Column(name = "stockQuantity")
     private Integer stockQuantity;
 
     @Column(nullable = false, precision = 10, scale = 2)
@@ -56,9 +62,11 @@ public class ProductData {
 
     @UpdateTimestamp
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Column(name = "lastUpdated")
     private LocalDateTime lastUpdated;
 
     @CreationTimestamp
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Column(name = "createdAt")
     private LocalDateTime createdAt;
 }

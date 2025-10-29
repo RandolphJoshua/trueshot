@@ -21,22 +21,23 @@ public class OrderData {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "buyerName")
     private String buyerName;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "buyerEmail")
     private String buyerEmail;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "buyerPhone")
     private String buyerPhone;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private OrderStatus status;
 
-    @Column(precision = 10, scale = 2)
+    @Column(precision = 10, scale = 2, name = "totalAmount")
     private BigDecimal totalAmount;
 
+    @Column(name = "specialInstructions")
     private String specialInstructions;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
@@ -47,9 +48,11 @@ public class OrderData {
 
     @UpdateTimestamp
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Column(name = "lastUpdated")
     private LocalDateTime lastUpdated;
 
     @CreationTimestamp
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Column(name = "createdAt")
     private LocalDateTime createdAt;
 }

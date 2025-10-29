@@ -20,29 +20,32 @@ public class OrderItemData {
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_id")
+    @JoinColumn(name = "order_id", nullable = false, foreignKey = @ForeignKey(name = "fk_order_item_order"))
     private OrderData order;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id", nullable = false, foreignKey = @ForeignKey(name = "fk_order_item_product"))
     private ProductData product;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "productName")
     private String productName;
 
+    @Column(name = "productBrand")
     private String productBrand;
 
+    @Column(name = "productCondition")
     private String productCondition;
 
+    @Column(name = "productImageUrl")
     private String productImageUrl;
 
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(nullable = false, precision = 10, scale = 2, name = "unitPrice")
     private BigDecimal unitPrice;
 
     @Column(nullable = false)
     private Integer quantity;
 
-    @Column(nullable = false, precision = 10, scale = 2)
+    @Column(nullable = false, precision = 10, scale = 2, name = "lineTotal")
     private BigDecimal lineTotal;
 
     @Enumerated(EnumType.STRING)
@@ -51,9 +54,11 @@ public class OrderItemData {
 
     @UpdateTimestamp
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Column(name = "lastUpdated")
     private LocalDateTime lastUpdated;
 
     @CreationTimestamp
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Column(name = "createdAt")
     private LocalDateTime createdAt;
 }
