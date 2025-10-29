@@ -1,0 +1,624 @@
+{
+  "info": {
+    "name": "TrueShot API",
+    "description": "Postman collection for the TrueShot backend endpoints used by the frontend application.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Accounts",
+      "item": [
+        {
+          "name": "List accounts",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/accounts",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "accounts"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get account by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/accounts/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "accounts",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create account",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"store-admin\",\n  \"email\": \"admin@trueshot.dev\",\n  \"fullName\": \"Store Administrator\",\n  \"role\": \"ADMIN\",\n  \"notes\": \"Has access to product catalog.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/accounts",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "accounts"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update account",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"store-support\",\n  \"email\": \"support@trueshot.dev\",\n  \"fullName\": \"Customer Support\",\n  \"role\": \"SUPPORT\",\n  \"notes\": \"Handles incoming enquiries.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/accounts/2",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "accounts",
+                "2"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete account",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/api/accounts/3",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "accounts",
+                "3"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "App Details",
+      "item": [
+        {
+          "name": "List app details entries",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/app-details",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "app-details"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get active app details",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/app-details/active",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "app-details",
+                "active"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create app details",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"storeName\": \"TrueShot Camera Exchange\",\n  \"heroMessage\": \"Capture your next story.\",\n  \"supportEmail\": \"support@trueshot.dev\",\n  \"supportNumber\": \"+1-555-555-0199\",\n  \"faqContent\": \"Frequently asked questions go here.\",\n  \"aboutContent\": \"About the marketplace content.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/app-details",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "app-details"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update app details",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"storeName\": \"TrueShot Camera Exchange\",\n  \"heroMessage\": \"Pre-loved gear, ready to ship.\",\n  \"supportEmail\": \"hello@trueshot.dev\",\n  \"supportNumber\": \"+1-555-010-2020\",\n  \"faqContent\": \"Updated FAQ copy.\",\n  \"aboutContent\": \"Updated about page content.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/app-details/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "app-details",
+                "1"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete app details",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/api/app-details/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "app-details",
+                "1"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "List products",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/products",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "products"
+              ]
+            }
+          }
+        },
+        {
+          "name": "List products by brand",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/products?brand=Fujifilm",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "brand",
+                  "value": "Fujifilm"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "List products by condition",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/products?condition=MINT",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "products"
+              ],
+              "query": [
+                {
+                  "key": "condition",
+                  "value": "MINT"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Search products",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/products/search?keyword=mirrorless&brand=Sony&condition=Excellent",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "products",
+                "search"
+              ],
+              "query": [
+                {
+                  "key": "keyword",
+                  "value": "mirrorless"
+                },
+                {
+                  "key": "brand",
+                  "value": "Sony"
+                },
+                {
+                  "key": "condition",
+                  "value": "Excellent"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get product by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/products/1001",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "products",
+                "1001"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create product",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sku\": \"FJ-XT5-BODY\",\n  \"brand\": \"Fujifilm\",\n  \"modelName\": \"X-T5 Body\",\n  \"conditionGrade\": \"EXCELLENT\",\n  \"description\": \"Mirrorless APS-C body with 40MP sensor.\",\n  \"imageUrl\": \"https://cdn.trueshot.dev/products/fj-xt5.jpg\",\n  \"lensMount\": \"Fujifilm X\",\n  \"sensorType\": \"APS-C\",\n  \"releaseYear\": 2022,\n  \"shutterCount\": 5200,\n  \"stockQuantity\": 4,\n  \"price\": 1699.0,\n  \"featured\": true,\n  \"available\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/products",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "products"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update product",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"sku\": \"FJ-XT5-BODY\",\n  \"brand\": \"Fujifilm\",\n  \"modelName\": \"X-T5 Body\",\n  \"conditionGrade\": \"EXCELLENT\",\n  \"description\": \"Updated description copy.\",\n  \"imageUrl\": \"https://cdn.trueshot.dev/products/fj-xt5.jpg\",\n  \"lensMount\": \"Fujifilm X\",\n  \"sensorType\": \"APS-C\",\n  \"releaseYear\": 2022,\n  \"shutterCount\": 5200,\n  \"stockQuantity\": 3,\n  \"price\": 1649.0,\n  \"featured\": true,\n  \"available\": true\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/products/1001",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "products",
+                "1001"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete product",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/api/products/1001",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "products",
+                "1001"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Group products by brand",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/products/grouped/brand",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "products",
+                "grouped",
+                "brand"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "Checkout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"buyerName\": \"Ava Thompson\",\n  \"buyerEmail\": \"ava@example.com\",\n  \"buyerPhone\": \"+1-555-010-3030\",\n  \"items\": [\n    {\n      \"productId\": 1001,\n      \"quantity\": 1\n    },\n    {\n      \"productId\": 1004,\n      \"quantity\": 2\n    }\n  ],\n  \"specialInstructions\": \"Please confirm availability before shipping.\",\n  \"paymentProvider\": \"stripe\",\n  \"paymentReference\": \"pi_3NcJ8YHYc\",\n  \"amountPaid\": 2499.0\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/orders/checkout",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "orders",
+                "checkout"
+              ]
+            }
+          }
+        },
+        {
+          "name": "List orders",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/orders",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "orders"
+              ]
+            }
+          }
+        },
+        {
+          "name": "List orders by customer email",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/orders?email=ava@example.com",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "orders"
+              ],
+              "query": [
+                {
+                  "key": "email",
+                  "value": "ava@example.com"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get order by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/orders/5001",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "orders",
+                "5001"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update order status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"SHIPPED\",\n  \"remarks\": \"Tracking number emailed to buyer.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/orders/5001/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "orders",
+                "5001",
+                "status"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Record order transaction",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"provider\": \"stripe\",\n  \"transactionReference\": \"ch_3NcJ8YHYc\",\n  \"paymentStatus\": \"PAID\",\n  \"amountPaid\": 2499.0,\n  \"paidAt\": \"2024-04-05T10:30:00\",\n  \"remarks\": \"Payment captured in full.\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/orders/5001/transaction",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "orders",
+                "5001",
+                "transaction"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Order Items",
+      "item": [
+        {
+          "name": "Get items for order",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/order-items/order/5001",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "order-items",
+                "order",
+                "5001"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get items for customer email",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/order-items?email=ava@example.com&status=ORDERED",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "order-items"
+              ],
+              "query": [
+                {
+                  "key": "email",
+                  "value": "ava@example.com"
+                },
+                {
+                  "key": "status",
+                  "value": "ORDERED"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    }
+  ]
+}

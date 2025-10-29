@@ -1,0 +1,51 @@
+services:
+  trueshot-db:
+    image: mysql:8.0
+    container_name: trueshot_db
+    restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: "AdobeAi@0112"
+      MYSQL_DATABASE: trueshot
+      # REMOVE MYSQL_USER and MYSQL_PASSWORD when using root
+      # If you want a non-root app user, add both:
+      # MYSQL_USER: trueshot
+      # MYSQL_PASSWORD: "Tru3shotPass!"
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./db:/var/lib/mysql
+      - ./init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-pAdobeAi@0112"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    networks:
+      - trueshot-net
+
+  trueshot-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: trueshot-api:latest
+    container_name: trueshot_api
+    depends_on:
+      trueshot-db:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://trueshot-db:3306/trueshot?allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true&useSSL=false
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: "AdobeAi@0112"
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    ports:
+      - "8080:8080"
+    networks:
+      - trueshot-net
+
+volumes:
+  trueshot-db-data:
+
+networks:
+  trueshot-net:
+    driver: bridge
