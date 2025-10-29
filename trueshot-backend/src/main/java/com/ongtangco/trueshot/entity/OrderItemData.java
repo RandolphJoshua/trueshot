@@ -1,6 +1,7 @@
 package com.ongtangco.trueshot.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.ongtangco.trueshot.enums.OrderItemStatus;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -21,6 +22,7 @@ public class OrderItemData {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false, foreignKey = @ForeignKey(name = "fk_order_item_order"))
+    @JsonBackReference
     private OrderData order;
 
     @ManyToOne(fetch = FetchType.LAZY)

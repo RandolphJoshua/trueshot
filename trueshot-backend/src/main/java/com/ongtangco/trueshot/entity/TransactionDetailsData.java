@@ -1,5 +1,6 @@
 package com.ongtangco.trueshot.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ongtangco.trueshot.enums.PaymentStatus;
 import lombok.Data;
@@ -21,6 +22,7 @@ public class TransactionDetailsData {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = false)
+    @JsonBackReference
     private OrderData order;
 
     @Column(nullable = false)

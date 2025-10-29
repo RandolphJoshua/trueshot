@@ -1,6 +1,7 @@
 package com.ongtangco.trueshot.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.ongtangco.trueshot.enums.OrderStatus;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -41,6 +42,7 @@ public class OrderData {
     private String specialInstructions;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<OrderItemData> items = new ArrayList<>();
 
     @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
