@@ -12,6 +12,9 @@ target/
 *.iml
 *.ipr
 
+/db
+/db/.sock
+
 ### Eclipse ###
 .apt_generated
 .classpath
