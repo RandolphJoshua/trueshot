@@ -1,1 +1,57 @@
-<p>catalog works!</p>
+<section class="catalog">
+  <h2>Camera Catalog</h2>
+
+  <div class="filters">
+    <div class="filter-group">
+      <label for="keyword">Search</label>
+      <input
+        id="keyword"
+        name="keyword"
+        type="text"
+        [(ngModel)]="searchKeyword"
+        (keyup.enter)="applyFilters()"
+        placeholder="Search by model or keywords"
+      />
+    </div>
+
+    <div class="filter-group">
+      <label for="brand">Brand</label>
+      <select id="brand" name="brand" [(ngModel)]="selectedBrand">
+        <option value="">All brands</option>
+        <option *ngFor="let brand of allBrands" [value]="brand">{{ brand }}</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="condition">Condition</label>
+      <select id="condition" name="condition" [(ngModel)]="selectedCondition">
+        <option value="">Any condition</option>
+        <option *ngFor="let condition of conditions" [value]="condition">{{ condition }}</option>
+      </select>
+    </div>
+
+    <div class="filter-actions">
+      <button type="button" (click)="applyFilters()">Apply</button>
+      <button type="button" class="secondary" (click)="clearFilters()">Clear</button>
+    </div>
+  </div>
+
+  <p class="info" *ngIf="feedbackMessage">{{ feedbackMessage }}</p>
+  <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+  <p class="info" *ngIf="loading">Loading products…</p>
+
+  <div class="product-grid" *ngIf="!loading && products.length">
+    <article class="product-card" *ngFor="let product of products">
+      <div class="product-image">
+        <img [src]="product.imageUrl || 'https://placehold.co/300x200'" [alt]="product.modelName || 'Camera'" />
+      </div>
+      <h3>{{ product.brand }} {{ product.modelName }}</h3>
+      <p class="condition">Condition: {{ product.conditionGrade || 'Unknown' }}</p>
+      <p class="price">{{ product.price | currency: 'PHP' : 'symbol' : '1.0-0' }}</p>
+      <p class="description">{{ product.description }}</p>
+      <button type="button" (click)="addToCart(product)">Add to cart</button>
+    </article>
+  </div>
+
+  <p *ngIf="!loading && !products.length && !errorMessage" class="info">No products found.</p>
+</section>
