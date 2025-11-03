@@ -1,77 +1,45 @@
-.contact {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2rem;
-  padding: 2rem 1rem;
-  background-color: #f8f9fa;
+/* Full-bleed hero with background image + overlay */
+.contact-hero {
+  position: relative;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  /* Remove next line if you don't want parallax-like effect */
+  background-attachment: fixed;
+  min-height: 70vh;
 }
 
-.contact-card,
-.contact-details {
-  flex: 1 1 280px;
-  background-color: #ffffff;
-  padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+.contact-hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 120% at 0% 0%, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.75));
 }
 
-.contact-card h2 {
-  margin-top: 0;
-  margin-bottom: 0.75rem;
+/* Keep content above overlay */
+.contact-hero .container {
+  position: relative;
+  z-index: 1;
 }
 
-.contact-card form {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+/* Glass card effect for the form */
+.glass {
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 16px;
 }
 
-.contact-card label {
-  font-weight: 600;
+.object-fit-cover {
+  object-fit: cover;
 }
 
-.contact-card input,
-.contact-card textarea {
-  padding: 0.6rem;
-  border-radius: 6px;
-  border: 1px solid #d0d0d0;
-  font-size: 0.95rem;
+/* Improve form focus & invalid states (Bootstrap-friendly) */
+.form-control:focus {
+  box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.25);
+  border-color: #0d6efd;
 }
 
-.contact-card button {
-  margin-top: 0.5rem;
-  padding: 0.7rem 1.2rem;
-  border: none;
-  border-radius: 6px;
-  background-color: #0d6efd;
-  color: #fff;
-  cursor: pointer;
-}
-
-.contact-card button[disabled] {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-
-.contact-details h3 {
-  margin-top: 0;
-}
-
-.contact-details ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.success {
-  margin-top: 1rem;
-  color: #198754;
-}
-
-.error {
-  margin-top: 1rem;
-  color: #dc3545;
+.is-invalid.form-control {
+  border-color: #dc3545;
 }

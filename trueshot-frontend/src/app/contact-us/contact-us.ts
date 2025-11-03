@@ -4,9 +4,10 @@ import { FormsModule, NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-contact-us',
+  standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './contact-us.html',
-  styleUrl: './contact-us.css'
+  styleUrls: ['./contact-us.css']   // <-- fix: styleUrls (plural)
 })
 export class ContactUs {
   sending = false;
@@ -23,7 +24,7 @@ export class ContactUs {
   submit(form: NgForm): void {
     if (form.invalid) {
       form.control.markAllAsTouched();
-      this.errorMessage = 'Please fill in all the fields before sending your message.';
+      this.errorMessage = 'Please fix the highlighted fields.';
       return;
     }
 
@@ -33,7 +34,7 @@ export class ContactUs {
 
     setTimeout(() => {
       this.sending = false;
-      this.successMessage = 'Your message was sent! We will reply soon.';
+      this.successMessage = 'Your message was sent! We’ll reply soon.';
       form.resetForm();
     }, 600);
   }

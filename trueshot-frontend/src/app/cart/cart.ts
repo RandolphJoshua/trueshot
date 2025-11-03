@@ -9,9 +9,10 @@ import { CheckoutRequest } from '../models/checkout';
 
 @Component({
   selector: 'app-cart',
+  standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './cart.html',
-  styleUrl: './cart.css'
+  styleUrls: ['./cart.css']   // <-- fix plural
 })
 export class Cart implements OnInit, OnDestroy {
   items: CartItem[] = [];
@@ -21,12 +22,7 @@ export class Cart implements OnInit, OnDestroy {
   errorMessage = '';
   private subscription?: Subscription;
 
-  buyer = {
-    name: '',
-    email: '',
-    phone: '',
-    instructions: ''
-  };
+  buyer = { name: '', email: '', phone: '', instructions: '' };
 
   constructor(private cartService: CartService, private orderService: OrderService) {}
 
@@ -43,20 +39,13 @@ export class Cart implements OnInit, OnDestroy {
 
   updateQuantity(item: CartItem, change: number): void {
     const newQuantity = item.quantity + change;
-    if (item.product.id == null) {
-      return;
-    }
-    if (newQuantity <= 0) {
-      this.cartService.remove(item.product.id);
-    } else {
-      this.cartService.updateQuantity(item.product.id, newQuantity);
-    }
+    if (item.product.id == null) return;
+    if (newQuantity <= 0) this.cartService.remove(item.product.id);
+    else this.cartService.updateQuantity(item.product.id, newQuantity);
   }
 
   remove(item: CartItem): void {
-    if (item.product.id == null) {
-      return;
-    }
+    if (item.product.id == null) return;
     this.cartService.remove(item.product.id);
   }
 
@@ -65,7 +54,6 @@ export class Cart implements OnInit, OnDestroy {
       this.errorMessage = 'Your cart is empty. Add some products first.';
       return;
     }
-
     if (form.invalid) {
       form.control.markAllAsTouched();
       this.errorMessage = 'Please complete your details before checking out.';
@@ -81,8 +69,8 @@ export class Cart implements OnInit, OnDestroy {
       buyerEmail: this.buyer.email,
       buyerPhone: this.buyer.phone,
       items: this.items
-        .filter(item => item.product.id != null)
-        .map(item => ({ productId: item.product.id as number, quantity: item.quantity })),
+        .filter(i => i.product.id != null)
+        .map(i => ({ productId: i.product.id as number, quantity: i.quantity })),
       specialInstructions: this.buyer.instructions || undefined
     };
 
@@ -99,5 +87,13 @@ export class Cart implements OnInit, OnDestroy {
         this.errorMessage = 'We could not process the checkout right now. Please try again later.';
       }
     });
+  }
+
+  onImgError($event: ErrorEvent) {
+    
+  }
+
+  getProductImage(id: number | undefined) {
+    
   }
 }
