@@ -1,0 +1,12 @@
+.featured {
+  background: #fff;
+}
+
+.object-fit-cover {
+  object-fit: cover;
+}
+
+.card-img-top {
+  border-top-left-radius: .5rem;
+  border-top-right-radius: .5rem;
+}

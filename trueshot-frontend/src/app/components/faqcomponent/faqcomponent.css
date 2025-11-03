@@ -1,0 +1,17 @@
+.faq {
+  background: #f8f9fa;
+}
+
+.faq h2 {
+  color: #212529;
+}
+
+.accordion-button:not(.collapsed) {
+  color: #0d6efd;
+  background-color: #e9f2ff;
+  box-shadow: none;
+}
+
+.accordion-button:focus {
+  box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.25);
+}
