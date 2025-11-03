@@ -7,8 +7,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: "AdobeAi@0112"
       MYSQL_DATABASE: trueshot
-      # REMOVE MYSQL_USER and MYSQL_PASSWORD when using root
-      # If you want a non-root app user, add both:
+      # Non-root app user
       # MYSQL_USER: trueshot
       # MYSQL_PASSWORD: "Tru3shotPass!"
     ports:
