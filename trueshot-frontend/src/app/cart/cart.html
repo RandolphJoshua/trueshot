@@ -1,1 +1,82 @@
-<p>cart works!</p>
+<section class="cart">
+  <h2>Your Cart</h2>
+
+  <div class="cart-items" *ngIf="items.length; else emptyCart">
+    <div class="cart-item" *ngFor="let item of items">
+      <div class="item-info">
+        <h3>{{ item.product.brand }} {{ item.product.modelName }}</h3>
+        <p>Condition: {{ item.product.conditionGrade || 'Unknown' }}</p>
+        <p>Price: {{ item.product.price | currency: 'PHP' : 'symbol' : '1.0-0' }}</p>
+      </div>
+
+      <div class="item-quantity">
+        <button type="button" (click)="updateQuantity(item, -1)">−</button>
+        <span>{{ item.quantity }}</span>
+        <button type="button" (click)="updateQuantity(item, 1)">+</button>
+      </div>
+
+      <div class="item-total">
+        {{ (item.product.price || 0) * item.quantity | currency: 'PHP' : 'symbol' : '1.0-0' }}
+      </div>
+
+      <button type="button" class="remove" (click)="remove(item)">Remove</button>
+    </div>
+
+    <div class="cart-summary">
+      <p class="summary-label">Total</p>
+      <p class="summary-total">{{ total | currency: 'PHP' : 'symbol' : '1.0-0' }}</p>
+    </div>
+  </div>
+
+  <ng-template #emptyCart>
+    <p class="info">Your cart is empty right now.</p>
+  </ng-template>
+
+  <form #checkoutForm="ngForm" class="checkout" (ngSubmit)="checkout(checkoutForm)">
+    <h3>Checkout details</h3>
+
+    <label for="buyerName">Full name</label>
+    <input
+      id="buyerName"
+      name="buyerName"
+      type="text"
+      required
+      minlength="2"
+      [(ngModel)]="buyer.name"
+    />
+
+    <label for="buyerEmail">Email</label>
+    <input
+      id="buyerEmail"
+      name="buyerEmail"
+      type="email"
+      required
+      [(ngModel)]="buyer.email"
+    />
+
+    <label for="buyerPhone">Phone number</label>
+    <input
+      id="buyerPhone"
+      name="buyerPhone"
+      type="tel"
+      required
+      [(ngModel)]="buyer.phone"
+    />
+
+    <label for="instructions">Special instructions (optional)</label>
+    <textarea
+      id="instructions"
+      name="instructions"
+      rows="3"
+      [(ngModel)]="buyer.instructions"
+      placeholder="Share delivery or payment notes"
+    ></textarea>
+
+    <button type="submit" [disabled]="sending">
+      {{ sending ? 'Submitting…' : 'Submit order' }}
+    </button>
+  </form>
+
+  <p class="success" *ngIf="successMessage">{{ successMessage }}</p>
+  <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+</section>
