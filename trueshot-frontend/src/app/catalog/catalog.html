@@ -1,57 +1,122 @@
-<section class="catalog">
-  <h2>Camera Catalog</h2>
+<section class="catalog py-5 bg-light">
+  <div class="container">
+    <h2 class="fw-bold mb-4 text-center">Camera Catalog</h2>
 
-  <div class="filters">
-    <div class="filter-group">
-      <label for="keyword">Search</label>
-      <input
-        id="keyword"
-        name="keyword"
-        type="text"
-        [(ngModel)]="searchKeyword"
-        (keyup.enter)="applyFilters()"
-        placeholder="Search by model or keywords"
-      />
-    </div>
+    <!-- Filters -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <div class="row g-3 align-items-end">
+          <!-- Search -->
+          <input
+            id="keyword"
+            name="keyword"
+            type="text"
+            class="form-control"
+            [(ngModel)]="searchKeyword"
+            (ngModelChange)="onSearchInput($event)"
+          (keyup.enter)="applyFilters()"
+          placeholder="Search by model or keywords"
+          />
 
-    <div class="filter-group">
-      <label for="brand">Brand</label>
-      <select id="brand" name="brand" [(ngModel)]="selectedBrand">
-        <option value="">All brands</option>
-        <option *ngFor="let brand of allBrands" [value]="brand">{{ brand }}</option>
-      </select>
-    </div>
+          <!-- Brand -->
+          <select
+            id="brand"
+            name="brand"
+            class="form-select"
+            [(ngModel)]="selectedBrand"
+            (ngModelChange)="onBrandChange($event)">
+          <option value="">All brands</option>
+          <option *ngFor="let brand of allBrands" [value]="brand">{{ brand }}</option>
+          </select>
 
-    <div class="filter-group">
-      <label for="condition">Condition</label>
-      <select id="condition" name="condition" [(ngModel)]="selectedCondition">
-        <option value="">Any condition</option>
-        <option *ngFor="let condition of conditions" [value]="condition">{{ condition }}</option>
-      </select>
-    </div>
+          <!-- Condition -->
+          <select
+            id="condition"
+            name="condition"
+            class="form-select"
+            [(ngModel)]="selectedCondition"
+            (ngModelChange)="onConditionChange($event)"
+          >
+          <option value="">Any condition</option>
+          <option *ngFor="let condition of conditions" [value]="condition">{{ condition }}</option>
+          </select>
 
-    <div class="filter-actions">
-      <button type="button" (click)="applyFilters()">Apply</button>
-      <button type="button" class="secondary" (click)="clearFilters()">Clear</button>
-    </div>
-  </div>
+          </div>
+        </div>
 
-  <p class="info" *ngIf="feedbackMessage">{{ feedbackMessage }}</p>
-  <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
-  <p class="info" *ngIf="loading">Loading products…</p>
-
-  <div class="product-grid" *ngIf="!loading && products.length">
-    <article class="product-card" *ngFor="let product of products">
-      <div class="product-image">
-        <img [src]="product.imageUrl || 'https://placehold.co/300x200'" [alt]="product.modelName || 'Camera'" />
+        <!-- Actions -->
+        <div class="d-flex gap-2 mt-3">
+          <button type="button" class="btn btn-primary" (click)="applyFilters()">Apply</button>
+          <button type="button" class="btn btn-outline-secondary" (click)="clearFilters()">Clear</button>
+          <div class="ms-auto small text-muted d-none d-md-block">
+            {{ products.length || 0 }} result(s)
+          </div>
+        </div>
       </div>
-      <h3>{{ product.brand }} {{ product.modelName }}</h3>
-      <p class="condition">Condition: {{ product.conditionGrade || 'Unknown' }}</p>
-      <p class="price">{{ product.price | currency: 'PHP' : 'symbol' : '1.0-0' }}</p>
-      <p class="description">{{ product.description }}</p>
-      <button type="button" (click)="addToCart(product)">Add to cart</button>
-    </article>
+    </div>
+
+
+    <!-- Feedback / Error -->
+    <p class="text-center text-muted" *ngIf="feedbackMessage">{{ feedbackMessage }}</p>
+    <div class="alert alert-danger text-center" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+    <!-- Products grid (no loading animation) -->
+    <div class="row g-4" *ngIf="products.length">
+      <div
+        class="col-12 col-sm-6 col-lg-3"
+        *ngFor="let product of products; trackBy: trackByProductId"
+      >
+        <article class="card h-100 shadow-sm product-card">
+          <div class="ratio ratio-4x3 bg-light rounded-top overflow-hidden">
+            <img
+              [src]="getProductImage(product.id)"
+              (error)="onImgError($event)"
+              [alt]="(product.brand || 'Camera') + ' ' + (product.modelName || '')"
+              class="w-100 h-100 object-fit-cover"
+            />
+          </div>
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title mb-1">
+              {{ product.brand }} {{ product.modelName }}
+            </h5>
+            <div class="small text-muted mb-2">
+              Condition:
+              <span class="badge rounded-pill bg-secondary">{{
+                  product.conditionGrade || 'Unknown'
+                }}</span>
+            </div>
+            <div class="fw-bold text-primary mb-2">
+              {{ product.price | currency:'PHP':'symbol':'1.0-0' }}
+            </div>
+            <p class="text-muted small flex-grow-1 mb-3">
+              {{ product.description || '—' }}
+            </p>
+            <button
+              type="button"
+              class="btn btn-success w-100 mt-auto"
+              (click)="addToCart(product)"
+              [disabled]="product.available === false"
+            >
+              {{ product.available === false ? 'Unavailable' : 'Add to cart' }}
+            </button>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <!-- Empty -->
+    <p *ngIf="!products.length && !errorMessage" class="text-center text-muted">
+      No products found.
+    </p>
+
+  <!-- Toasts (top-right) -->
+  <div class="ts-toast-container" aria-live="polite" aria-atomic="true">
+    <div class="ts-toast shadow" *ngFor="let t of toasts" (click)="removeToast(t.id)">
+      <div class="ts-toast-body">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        {{ t.text }}
+      </div>
+    </div>
   </div>
 
-  <p *ngIf="!loading && !products.length && !errorMessage" class="info">No products found.</p>
 </section>

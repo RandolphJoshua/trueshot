@@ -6,13 +6,14 @@ import { CartService } from '../services/cart.service';
 import { OrderService } from '../services/order.service';
 import { CartItem } from '../models/cart-item';
 import { CheckoutRequest } from '../models/checkout';
+import {RouterLink} from '@angular/router';
 
 @Component({
   selector: 'app-cart',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './cart.html',
-  styleUrls: ['./cart.css']   // <-- fix plural
+  styleUrls: ['./cart.css']
 })
 export class Cart implements OnInit, OnDestroy {
   items: CartItem[] = [];
@@ -24,7 +25,10 @@ export class Cart implements OnInit, OnDestroy {
 
   buyer = { name: '', email: '', phone: '', instructions: '' };
 
-  constructor(private cartService: CartService, private orderService: OrderService) {}
+  constructor(
+    private cartService: CartService,
+    private orderService: OrderService
+  ) {}
 
   ngOnInit(): void {
     this.subscription = this.cartService.items$.subscribe(items => {
@@ -89,11 +93,17 @@ export class Cart implements OnInit, OnDestroy {
     });
   }
 
-  onImgError($event: ErrorEvent) {
-    
+  /** Builds product image URL based on product id */
+  getProductImage(id: number | null | undefined): string {
+    if (id == null) {
+      return 'assets/images/placeholder-camera.jpg';
+    }
+    return `assets/images/${id}.png`;
   }
 
-  getProductImage(id: number | undefined) {
-    
+  /** Replaces broken images with a fallback */
+  onImgError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.src = 'assets/images/placeholder-camera.jpg';
   }
 }

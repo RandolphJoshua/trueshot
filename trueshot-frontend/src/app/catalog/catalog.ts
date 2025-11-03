@@ -1,82 +1,102 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { ProductService } from '../services/product.service';
 import { Product } from '../models/product';
 import { CartService } from '../services/cart.service';
 
+type Condition = 'MINT' | 'EXCELLENT' | 'GOOD' | 'FAIR' | 'FOR_PARTS';
+
+interface ToastMsg {
+  id: number;
+  text: string;
+}
+
 @Component({
   selector: 'app-catalog',
+  standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './catalog.html',
-  styleUrl: './catalog.css'
+  styleUrls: ['./catalog.css']
 })
 export class Catalog implements OnInit {
+  private route = inject(ActivatedRoute);
+
+  // master list loaded via resolver
+  private allProducts: Product[] = [];
+
+  // rendered list
   products: Product[] = [];
+
+  // filters
   allBrands: string[] = [];
-  readonly conditions = ['MINT', 'EXCELLENT', 'GOOD', 'FAIR', 'FOR_PARTS'];
+  readonly conditions: Condition[] = ['MINT','EXCELLENT','GOOD','FAIR','FOR_PARTS'];
   searchKeyword = '';
   selectedBrand = '';
   selectedCondition = '';
-  loading = false;
+
+  // ui
   errorMessage = '';
   feedbackMessage = '';
 
-  constructor(private productService: ProductService, private cartService: CartService) {}
+  // --- Toast state (top-right) ---
+  toasts: ToastMsg[] = [];
+  private toastSeq = 0;
+
+  // --- Center dialog state ---
+  showDialog = false;
+  lastAddedName = '';
+
+  constructor(
+    private productService: ProductService,
+    private cartService: CartService
+  ) {}
 
   ngOnInit(): void {
-    this.loadBrands();
-    this.loadProducts();
+    const resolved = (this.route.snapshot.data['products'] as Product[]) ?? [];
+    this.allProducts = resolved;
+    this.allBrands = this.extractBrands(this.allProducts);
+    this.products = this.filterNow();
+
+    if (!this.allProducts.length) {
+      this.productService.getProducts().subscribe({
+        next: list => {
+          this.allProducts = (list || []).filter(p => p.available !== false);
+          this.allBrands = this.extractBrands(this.allProducts);
+          this.products = this.filterNow();
+        },
+        error: () => (this.errorMessage = 'We could not load the catalog right now. Please try again later.')
+      });
+    }
   }
 
-  loadBrands(): void {
-    this.productService.getProducts().subscribe({
-      next: products => {
-        this.allBrands = this.extractBrands(products);
-      },
-      error: () => {
-        this.allBrands = [];
+  // Filters
+  applyFilters(): void { this.products = this.filterNow(); }
+  onSearchInput(value: string): void { this.searchKeyword = (value || '').trim(); }
+  onBrandChange(value: string): void { this.selectedBrand = value || ''; this.products = this.filterNow(); }
+  onConditionChange(value: string): void { this.selectedCondition = value || ''; this.products = this.filterNow(); }
+  clearFilters(): void { this.searchKeyword = ''; this.selectedBrand = ''; this.selectedCondition = ''; this.products = this.filterNow(); }
+
+  private filterNow(): Product[] {
+    const kw = this.searchKeyword.toLowerCase();
+    const brand = this.selectedBrand;
+    const cond = this.selectedCondition;
+
+    return this.allProducts.filter(p => {
+      if (brand && p.brand !== brand) return false;
+      if (cond && p.conditionGrade !== cond) return false;
+      if (kw) {
+        const hay = [p.brand ?? '', p.modelName ?? '', p.description ?? '', p.sku ?? '']
+          .join(' ')
+          .toLowerCase();
+        if (!hay.includes(kw)) return false;
       }
+      return true;
     });
   }
 
-  loadProducts(): void {
-    this.loading = true;
-    this.errorMessage = '';
-    const brand = this.selectedBrand || undefined;
-    const condition = this.selectedCondition || undefined;
-    const keyword = this.searchKeyword.trim();
-    const request$ = keyword
-      ? this.productService.searchProducts(keyword, brand, condition)
-      : this.productService.getProducts(brand, condition);
-
-    request$.subscribe({
-      next: products => {
-        this.products = products.filter(product => product.available !== false);
-        if (!this.allBrands.length) {
-          this.allBrands = this.extractBrands(products);
-        }
-        this.loading = false;
-      },
-      error: () => {
-        this.errorMessage = 'We could not load the catalog right now. Please try again later.';
-        this.products = [];
-        this.loading = false;
-      }
-    });
-  }
-
-  applyFilters(): void {
-    this.loadProducts();
-  }
-
-  clearFilters(): void {
-    this.searchKeyword = '';
-    this.selectedBrand = '';
-    this.selectedCondition = '';
-    this.loadProducts();
-  }
-
+  // Add to cart + notification
   addToCart(product: Product): void {
     if (product.available === false) {
       this.feedbackMessage = 'This item is currently unavailable.';
@@ -85,18 +105,51 @@ export class Catalog implements OnInit {
     this.cartService.add(product);
     const name = [product.brand, product.modelName].filter(Boolean).join(' ');
     this.feedbackMessage = `${name || 'Product'} was added to your cart.`;
-    setTimeout(() => {
-      this.feedbackMessage = '';
-    }, 3000);
+    setTimeout(() => (this.feedbackMessage = ''), 2000);
+
+    // Choose ONE of the two lines below (toast vs dialog):
+
+    // 1) Show toast (top-right)
+    this.pushToast(`Added to cart: ${name || 'Product'}`);
+
+    // 2) Or show centered dialog
+    // this.openDialog(name || 'Product');
   }
+
+  // --- Toast helpers (top-right) ---
+  pushToast(text: string, ms = 2200): void {
+    const id = ++this.toastSeq;
+    this.toasts = [...this.toasts, { id, text }];
+    setTimeout(() => this.removeToast(id), ms);
+  }
+  removeToast(id: number): void {
+    this.toasts = this.toasts.filter(t => t.id !== id);
+  }
+
+  // --- Dialog helpers (center modal-ish) ---
+  openDialog(name: string): void {
+    this.lastAddedName = name;
+    this.showDialog = true;
+  }
+  closeDialog(): void {
+    this.showDialog = false;
+  }
+
+  // Image helpers
+  getProductImage(id: number | null | undefined): string {
+    if (id == null) return 'assets/images/placeholder-camera.jpg';
+    return `assets/images/${id}.png`;
+  }
+  onImgError(event: Event): void {
+    (event.target as HTMLImageElement).src = 'assets/images/placeholder-camera.jpg';
+  }
+
+  // ngFor perf
+  trackByProductId = (_: number, p: Product) => p.id ?? _;
 
   private extractBrands(products: Product[]): string[] {
     return Array.from(
-      new Set(
-        products
-          .map(product => product.brand)
-          .filter((brand): brand is string => !!brand && brand.trim().length > 0)
-      )
+      new Set((products || []).map(p => p.brand).filter((b): b is string => !!b && !!b.trim()))
     ).sort();
   }
 }
