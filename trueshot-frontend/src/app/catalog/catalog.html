@@ -1,1 +1,56 @@
-<p>catalog works!</p>
+<section class="catalog">
+  <h1>Camera Catalog</h1>
+
+  <form class="filters" (ngSubmit)="applyFilters()">
+    <div class="field">
+      <label for="searchTerm">Search</label>
+      <input
+        id="searchTerm"
+        name="searchTerm"
+        type="text"
+        [(ngModel)]="searchTerm"
+        placeholder="Search by model or description"
+      />
+    </div>
+
+    <div class="field">
+      <label for="brandFilter">Brand</label>
+      <select id="brandFilter" name="brandFilter" [(ngModel)]="selectedBrand">
+        <option value="">All brands</option>
+        <option *ngFor="let brand of brandOptions" [value]="brand">{{ brand }}</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="conditionFilter">Condition</label>
+      <select id="conditionFilter" name="conditionFilter" [(ngModel)]="selectedCondition">
+        <option value="">All conditions</option>
+        <option *ngFor="let condition of conditionOptions" [value]="condition">{{ condition }}</option>
+      </select>
+    </div>
+
+    <div class="actions">
+      <button type="submit">Apply</button>
+      <button type="button" (click)="clearFilters()">Clear</button>
+    </div>
+  </form>
+
+  <p class="status" *ngIf="cartMessage">{{ cartMessage }}</p>
+  <p class="status error" *ngIf="errorMessage">{{ errorMessage }}</p>
+  <p class="status" *ngIf="isLoading">Loading products...</p>
+
+  <div class="catalog-grid" *ngIf="!isLoading && products.length">
+    <article class="product-card" *ngFor="let product of products; trackBy: trackByProduct">
+      <img [src]="product.imageUrl" [alt]="product.modelName" />
+      <h2>{{ product.brand }} {{ product.modelName }}</h2>
+      <p class="price">{{ product.price | currency: 'USD' }}</p>
+      <p class="condition">Condition: {{ product.conditionGrade }}</p>
+      <p class="description">{{ product.description }}</p>
+      <button type="button" (click)="addToCart(product)">Add to cart</button>
+    </article>
+  </div>
+
+  <p class="status" *ngIf="!isLoading && !products.length && !errorMessage">
+    No products matched your filters.
+  </p>
+</section>

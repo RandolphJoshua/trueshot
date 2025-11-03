@@ -1,1 +1,44 @@
-<p>cart works!</p>
+<section class="cart">
+  <h1>Your Cart</h1>
+  <p class="message" *ngIf="message">{{ message }}</p>
+
+  <table *ngIf="cartItems.length; else emptyCart">
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Price</th>
+        <th>Subtotal</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of cartItems">
+        <td>
+          <div class="product-info">
+            <img [src]="item.product.imageUrl" [alt]="item.product.modelName" />
+            <div>
+              <p class="name">{{ item.product.brand }} {{ item.product.modelName }}</p>
+              <p class="condition">Condition: {{ item.product.conditionGrade }}</p>
+            </div>
+          </div>
+        </td>
+        <td>{{ item.quantity }}</td>
+        <td>{{ item.product.price | currency: 'USD' }}</td>
+        <td>{{ item.product.price * item.quantity | currency: 'USD' }}</td>
+        <td>
+          <button type="button" (click)="removeItem(item)">Remove</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ng-template #emptyCart>
+    <p class="empty">Your cart is empty. Add a product from the catalog to get started.</p>
+  </ng-template>
+
+  <div class="summary" *ngIf="cartItems.length">
+    <p class="total">Total: {{ total | currency: 'USD' }}</p>
+    <button type="button" (click)="checkout()">Checkout</button>
+  </div>
+</section>

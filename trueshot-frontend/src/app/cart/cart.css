@@ -1,0 +1,103 @@
+.cart {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.cart h1 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.message {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+table th,
+table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+}
+
+table thead {
+  background-color: #f3f4f6;
+}
+
+.product-info {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.product-info img {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+}
+
+.product-info .name {
+  margin: 0;
+  font-weight: 600;
+}
+
+.product-info .condition {
+  margin: 0;
+  color: #6b7280;
+}
+
+table button {
+  padding: 0.4rem 0.9rem;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: #dc2626;
+  color: #fff;
+  cursor: pointer;
+}
+
+.summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.5rem;
+  background-color: #f9fafb;
+  padding: 1rem 1.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid #e5e7eb;
+}
+
+.summary .total {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.summary button {
+  padding: 0.7rem 1.6rem;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: #16a34a;
+  color: #fff;
+  cursor: pointer;
+}
+
+.summary button:hover,
+table button:hover {
+  opacity: 0.9;
+}
+
+.empty {
+  text-align: center;
+  margin: 2rem 0;
+  color: #6b7280;
+}

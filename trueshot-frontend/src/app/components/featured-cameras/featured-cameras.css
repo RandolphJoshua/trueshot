@@ -1,12 +1,86 @@
 .featured {
-  background: #fff;
+  padding: 2rem 1rem;
+  background-color: #0f172a;
+  color: #e2e8f0;
+  border-radius: 1rem;
+  text-align: center;
 }
 
-.object-fit-cover {
+.featured h2 {
+  margin-bottom: 1rem;
+}
+
+.status {
+  margin-top: 1rem;
+}
+
+.status.error {
+  color: #f87171;
+}
+
+.carousel {
+  display: grid;
+  grid-template-columns: 48px 1fr 48px;
+  align-items: center;
+  gap: 1rem;
+}
+
+.carousel button {
+  border: none;
+  background: transparent;
+  color: #e2e8f0;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.carousel-item {
+  background-color: rgba(15, 23, 42, 0.6);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  display: grid;
+  gap: 0.75rem;
+  justify-items: center;
+}
+
+.carousel-item img {
+  width: 220px;
+  height: 220px;
   object-fit: cover;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.4);
 }
 
-.card-img-top {
-  border-top-left-radius: .5rem;
-  border-top-right-radius: .5rem;
+.carousel-item h3 {
+  margin: 0;
+}
+
+.carousel-item .price {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #38bdf8;
+}
+
+.carousel-item .condition {
+  margin: 0;
+  color: #cbd5f5;
+}
+
+.dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.dots button {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: none;
+  background-color: rgba(148, 163, 184, 0.6);
+  cursor: pointer;
+}
+
+.dots button.active {
+  background-color: #38bdf8;
 }
