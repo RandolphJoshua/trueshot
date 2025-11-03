@@ -1,5 +1,52 @@
-<footer class="app-footer">
+<footer class="app-footer text-light pt-5 pb-4 mt-5">
   <div class="container">
-    <p>&copy; {{ year }} TrueShot Marketplace. Crafted for second-hand camera enthusiasts.</p>
+    <div class="row gy-4">
+      <!-- Brand & description -->
+      <div class="col-md-4">
+        <div class="d-flex align-items-center mb-2">
+          <img
+            src="assets/icons/favicon-32x32.png"
+            alt="TrueShot logo"
+            width="32"
+            height="32"
+            class="me-2 rounded"
+          />
+          <h5 class="fw-bold mb-0">TrueShot</h5>
+        </div>
+        <p class="small mb-0">
+          Curated marketplace for second-hand cameras — trusted by photographers, built for enthusiasts.
+        </p>
+      </div>
+
+      <!-- Quick links -->
+      <div class="col-md-4">
+        <h6 class="fw-semibold mb-3">Quick Links</h6>
+        <ul class="list-unstyled">
+          <li><a routerLink="/" class="footer-link">Home</a></li>
+          <li><a routerLink="/catalog" class="footer-link">Catalog</a></li>
+          <li><a routerLink="/contact" class="footer-link">Contact</a></li>
+          <li><a routerLink="/cart" class="footer-link">Cart</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact -->
+      <div class="col-md-4">
+        <h6 class="fw-semibold mb-3">Get in Touch</h6>
+        <ul class="list-unstyled small">
+          <li>Email: <a href="mailto:support@trueshot.local" class="footer-link">support@trueshot.local</a></li>
+          <li>Phone: +63 (02) 1234-5678</li>
+          <li>Address: Makati, Metro Manila</li>
+        </ul>
+        <button class="btn btn-outline-light btn-sm mt-2" (click)="scrollTop($event)">
+          <i class="bi bi-arrow-up-circle me-1"></i> Back to top
+        </button>
+      </div>
+    </div>
+
+    <hr class="border-secondary my-4" />
+
+    <div class="text-center small">
+      &copy; {{ year }} TrueShot Marketplace. Crafted with passion for second-hand camera enthusiasts.
+    </div>
   </div>
 </footer>
