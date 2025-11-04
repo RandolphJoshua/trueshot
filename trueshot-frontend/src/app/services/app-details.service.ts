@@ -10,11 +10,7 @@ import { API_BASE_URL } from './api-config';
 export class AppDetailsService {
   private readonly http = inject(HttpClient);
   private readonly activeDetails$ = this.http
-    .get<AppDetails | null>(`${API_BASE_URL}/app-details/active`)
-    .pipe(
-      catchError(() => of(null)),
-      shareReplay({ bufferSize: 1, refCount: true })
-    );
+    .get<AppDetails | null>(`${API_BASE_URL}/app-details/active`);
 
   getActiveDetails(): Observable<AppDetails | null> {
     return this.activeDetails$;

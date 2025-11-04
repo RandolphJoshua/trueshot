@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CheckoutRequest } from '../models/checkout';
 import { API_BASE_URL } from './api-config';
+import {Order} from '../models/order';
 
 @Injectable({ providedIn: 'root' })
 export class OrderService {
@@ -13,7 +14,13 @@ export class OrderService {
     return this.http.post(`${this.ordersUrl}/checkout`, request);
   }
 
-  getOrderbyId(id: number): Observable<any> {
-    return this.http.get(`${this.ordersUrl}/${id}`);
+  getOrderById(id: number): Observable<Order> {
+    return this.http.get<Order>(`${this.ordersUrl}/${id}`);
+  }
+
+  getOrdersByEmail(email: string): Observable<Order[]> {
+    return this.http.get<Order[]>(`${this.ordersUrl}`, {
+      params: {email}
+    });
   }
 }

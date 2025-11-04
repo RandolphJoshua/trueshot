@@ -1,1 +1,117 @@
-<
+<section class="order-status py-5 bg-light min-vh-100">
+  <div class="container">
+    <h2 class="fw-bold mb-4 text-center">Track your order</h2>
+    <p class="text-muted text-center mx-auto mb-5 max-w-600">
+      Enter your order ID or the email you used at checkout to see your latest update.
+    </p>
+
+    <form class="card shadow-sm mb-4" (ngSubmit)="lookupOrder()">
+      <div class="card-body">
+        <div class="row g-3">
+          <div class="col-12 col-md-6">
+            <label for="orderId" class="form-label fw-semibold">Order ID</label>
+            <input
+              id="orderId"
+              name="orderId"
+              type="text"
+              class="form-control"
+              placeholder="e.g. 1234"
+              [(ngModel)]="searchOrderId"
+              (input)="searchEmail = ''"
+            />
+          </div>
+          <div class="col-12 col-md-6">
+            <label for="email" class="form-label fw-semibold">Email</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              class="form-control"
+              placeholder="you@example.com"
+              [(ngModel)]="searchEmail"
+              (input)="searchOrderId = ''"
+            />
+          </div>
+        </div>
+        <div class="d-flex align-items-center gap-2 mt-4 flex-wrap">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="loading || (!searchOrderId && !searchEmail)"
+          >
+            {{ loading ? 'Searching…' : 'Check status' }}
+          </button>
+          <button type="button" class="btn btn-outline-secondary" (click)="reset()">
+            Clear
+          </button>
+          <span class="ms-auto text-muted small" *ngIf="orders.length">
+            {{ orders.length }} order{{ orders.length > 1 ? 's' : '' }} found
+          </span>
+        </div>
+      </div>
+    </form>
+
+    <div class="alert alert-danger text-center" *ngIf="errorMessage && !loading">
+      {{ errorMessage }}
+    </div>
+
+    <ng-container *ngIf="selectedOrder as order">
+      <div class="card shadow-sm mb-4">
+        <div class="card-body d-flex flex-column flex-md-row align-items-md-center gap-3">
+          <div>
+            <h5 class="mb-1">Order #{{ order.id || '—' }}</h5>
+            <div class="text-muted small">{{ order.buyerName || 'Customer' }} · {{ order.buyerEmail }}</div>
+          </div>
+          <div class="ms-md-auto text-center text-md-end">
+            <div class="status-label">{{ getStatusLabel(order.status) }}</div>
+            <div class="small text-muted">Updated {{ order.lastUpdated | date:'medium' }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card shadow-sm mb-4" *ngIf="orders.length > 1">
+        <div class="card-body d-flex flex-wrap gap-2 align-items-center">
+          <span class="fw-semibold">Other orders:</span>
+          <button
+            type="button"
+            class="btn btn-sm"
+            [class.btn-primary]="orderOption.id === order.id"
+            [class.btn-outline-primary]="orderOption.id !== order.id"
+            *ngFor="let orderOption of orders"
+            (click)="selectOrder(orderOption)"
+          >
+            #{{ orderOption.id }}
+          </button>
+        </div>
+      </div>
+
+      <div class="order-items">
+        <h3 class="fw-semibold mb-3">Items in this order</h3>
+        <div class="row g-4" *ngIf="order.items?.length; else noItems">
+          <div class="col-12 col-md-6 col-lg-4" *ngFor="let item of order.items; trackBy: trackByItemId">
+            <article class="card h-100 shadow-sm order-item-card">
+              <div class="ratio ratio-4x3 bg-light rounded-top overflow-hidden">
+                <img
+                  [src]="item.productImageUrl || placeholderImage"
+                  (error)="onImgError($event)"
+                  [alt]="item.productName || 'Ordered item'"
+                  class="w-100 h-100 object-fit-cover"
+                />
+              </div>
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title mb-1">{{ item.productBrand }} {{ item.productName }}</h5>
+                <p class="text-muted small mb-2">Condition: {{ item.productCondition || '—' }}</p>
+                <div class="fw-bold text-primary mb-2">{{ item.unitPrice | currency:'PHP' }}</div>
+                <div class="small text-muted">Quantity: {{ item.quantity || 1 }}</div>
+                <div class="mt-auto small text-muted">Line total: {{ item.lineTotal | currency:'PHP' }}</div>
+              </div>
+            </article>
+          </div>
+        </div>
+        <ng-template #noItems>
+          <p class="text-muted text-center">No items found for this order.</p>
+        </ng-template>
+      </div>
+    </ng-container>
+  </div>
+</section>
