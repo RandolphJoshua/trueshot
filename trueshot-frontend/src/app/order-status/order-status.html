@@ -18,6 +18,7 @@
               placeholder="e.g. 1234"
               [(ngModel)]="searchOrderId"
               (input)="searchEmail = ''"
+              (keyup.enter)="lookupOrder()"
             />
           </div>
           <div class="col-12 col-md-6">
@@ -30,6 +31,7 @@
               placeholder="you@example.com"
               [(ngModel)]="searchEmail"
               (input)="searchOrderId = ''"
+              (keydown.enter)="onEnter($event)"
             />
           </div>
         </div>

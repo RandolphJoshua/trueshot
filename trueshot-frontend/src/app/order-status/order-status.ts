@@ -1,8 +1,11 @@
-import {Component, inject} from '@angular/core';
+import {ChangeDetectorRef, Component, DestroyRef, inject} from '@angular/core';
 import {Order, OrderItem} from '../models/order';
 import {OrderService} from '../services/order.service';
 import {CommonModule, CurrencyPipe, DatePipe} from '@angular/common';
 import {FormsModule} from '@angular/forms';
+
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {finalize} from 'rxjs';
 
 @Component({
   selector: 'app-order-status',
@@ -15,11 +18,14 @@ import {FormsModule} from '@angular/forms';
   ],
 
   templateUrl: './order-status.html',
-  styleUrl: './order-status.css'
+  styleUrl: './order-status.css',
+
 })
 export class OrderStatus {
   private readonly orderService = inject(OrderService);
   protected readonly placeholderImage = 'assets/images/placeholder-camera.jpg';
+  private readonly cdr = inject(ChangeDetectorRef);
+  private readonly destroyRef = inject(DestroyRef);
 
   protected searchOrderId = '';
   protected searchEmail = '';
@@ -29,6 +35,9 @@ export class OrderStatus {
   protected selectedOrder: Order | null = null;
 
   lookupOrder(): void {
+    if (this.loading) {
+      return;
+    }
     const trimmedId = this.searchOrderId.trim();
     const trimmedEmail = this.searchEmail.trim();
 
@@ -82,6 +91,19 @@ export class OrderStatus {
         this.loading = false;
       }
     });
+  }
+
+  // Ensure pressing Enter uses the latest ngModel value.
+  // Prevent default submit, blur the input (commits model), then call lookupOrder.
+  onEnter(event: Event): void {
+    // event is typed as Event from the template; cast to KeyboardEvent only if needed
+    event.preventDefault();
+    const target = event.target as HTMLInputElement | null;
+    if (target && typeof target.blur === 'function') {
+      target.blur();
+    }
+    // Schedule lookup after blur so ngModel has updated
+    setTimeout(() => this.lookupOrder(), 0);
   }
 
   selectOrder(order: Order): void {
