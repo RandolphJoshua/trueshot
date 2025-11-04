@@ -20,6 +20,12 @@ export class ProductService {
     return this.http.get<Product[]>(this.productsUrl, { params });
   }
 
+  // Try to load featured products. Backend should accept ?featured=true or ignore param.
+  getFeaturedProducts(): Observable<Product[]> {
+    const params = new HttpParams().set('featured', 'true');
+    return this.http.get<Product[]>(this.productsUrl, { params });
+  }
+
   searchProducts(keyword: string, brand?: string, condition?: string): Observable<Product[]> {
     let params = new HttpParams();
     if (keyword) {

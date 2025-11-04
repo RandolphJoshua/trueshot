@@ -33,8 +33,20 @@
       <div class="col-md-4">
         <h6 class="fw-semibold mb-3">Get in Touch</h6>
         <ul class="list-unstyled small">
-          <li>Email: <a href="mailto:support@trueshot.local" class="footer-link">support@trueshot.local</a></li>
-          <li>Phone: +63 (02) 1234-5678</li>
+          <li>
+            Email:
+            <ng-container *ngIf="supportEmail; else noEmail">
+              <a [href]="'mailto:' + supportEmail" class="footer-link">{{ supportEmail }}</a>
+            </ng-container>
+            <ng-template #noEmail><span class="text-muted">—</span></ng-template>
+          </li>
+          <li>
+            Phone:
+            <ng-container *ngIf="supportPhone; else noPhone">
+              <a [href]="'tel:' + supportPhone" class="footer-link">{{ supportPhone }}</a>
+            </ng-container>
+            <ng-template #noPhone><span class="text-muted">—</span></ng-template>
+          </li>
           <li>Address: Makati, Metro Manila</li>
         </ul>
         <button class="btn btn-outline-light btn-sm mt-2" (click)="scrollTop($event)">

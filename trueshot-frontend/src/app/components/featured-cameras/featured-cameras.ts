@@ -1,18 +1,25 @@
-import { Component, OnInit } from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit, inject} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Product } from '../../models/product';
 import { ProductService } from '../../services/product.service';
+
+type FeaturedCamera = Product & { imageSrc: string };
+
 
 @Component({
   selector: 'app-featured-cameras',
   imports: [CommonModule],
   templateUrl: './featured-cameras.html',
-  styleUrl: './featured-cameras.css'
+  styleUrls: ['./featured-cameras.css']
 })
 export class FeaturedCameras implements OnInit {
-  cameras: Product[] = [];
+  private readonly cdr = inject(ChangeDetectorRef);
+
+  cameras: FeaturedCamera[] = [];
   currentIndex = 0;
   errorMessage = '';
+  // fallback placeholder used when an image is missing
+  placeholderImage = 'https://placehold.co/320x200';
 
   constructor(private productService: ProductService) {}
 
@@ -20,16 +27,27 @@ export class FeaturedCameras implements OnInit {
     this.loadFeatured();
   }
 
+  onImgError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    if (img) {
+      img.src = this.placeholderImage;
+    }
+  }
+
   loadFeatured(): void {
     this.productService.getProducts().subscribe({
       next: products => {
         const featured = products.filter(product => product.featured);
         const source = featured.length ? featured : products;
-        this.cameras = this.pickRandomFive(source);
+        this.errorMessage = '';
+        this.cameras = this.decorateCameras(this.pickRandomFive(source));
         this.currentIndex = 0;
+        this.cdr.detectChanges();
+
       },
       error: () => {
         this.errorMessage = 'Featured cameras are unavailable right now.';
+        this.cdr.detectChanges();
       }
     });
   }
@@ -55,5 +73,22 @@ export class FeaturedCameras implements OnInit {
       [copy[i], copy[j]] = [copy[j], copy[i]];
     }
     return copy.slice(0, Math.min(5, copy.length));
+  }
+
+  private decorateCameras(products: Product[]): FeaturedCamera[] {
+    return products.map(product => ({
+      ...product,
+      imageSrc: this.resolveImageSource(product)
+    }));
+  }
+
+  private resolveImageSource(product: Product): string {
+    if (product.id != null) {
+      return `assets/images/${product.id}.png`;
+    }
+    if (product.imageUrl) {
+      return product.imageUrl;
+    }
+    return this.placeholderImage;
   }
 }

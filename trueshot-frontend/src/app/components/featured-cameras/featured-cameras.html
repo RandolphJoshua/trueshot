@@ -1,5 +1,5 @@
 <section class="featured">
-  <h2>Featured Cameras</h2>
+  <h2>Featured Products</h2>
   <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
 
   <ng-container *ngIf="cameras.length; else empty">
@@ -7,7 +7,7 @@
       <button type="button" class="nav" aria-label="Previous" (click)="previous()">‹</button>
 
       <div class="slide" *ngIf="cameras[currentIndex] as camera">
-        <img [src]="camera.imageUrl || 'https://placehold.co/320x200'" [alt]="camera.modelName || 'Featured camera'" />
+        <img [src]="camera.imageSrc" (error)="onImgError($event)" [alt]="camera.modelName || 'Featured Product'" />
         <h3>{{ camera.brand }} {{ camera.modelName }}</h3>
         <p>{{ camera.description }}</p>
         <p class="price">{{ camera.price | currency: 'PHP' : 'symbol' : '1.0-0' }}</p>

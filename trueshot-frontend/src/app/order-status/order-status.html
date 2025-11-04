@@ -18,7 +18,7 @@
               placeholder="e.g. 1234"
               [(ngModel)]="searchOrderId"
               (input)="searchEmail = ''"
-              (keyup.enter)="lookupOrder()"
+              (keydown.enter)="onEnter($event)"
             />
           </div>
           <div class="col-12 col-md-6">
@@ -41,7 +41,7 @@
             class="btn btn-primary"
             [disabled]="loading || (!searchOrderId && !searchEmail)"
           >
-            {{ loading ? 'Searching…' : 'Check status' }}
+            Check status
           </button>
           <button type="button" class="btn btn-outline-secondary" (click)="reset()">
             Clear
@@ -94,7 +94,7 @@
             <article class="card h-100 shadow-sm order-item-card">
               <div class="ratio ratio-4x3 bg-light rounded-top overflow-hidden">
                 <img
-                  [src]="item.productImageUrl || placeholderImage"
+                  [src]="getItemImage(item)"
                   (error)="onImgError($event)"
                   [alt]="item.productName || 'Ordered item'"
                   class="w-100 h-100 object-fit-cover"

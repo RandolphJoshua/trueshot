@@ -26,6 +26,9 @@ export class Catalog implements OnInit {
   // master list loaded via resolver
   private allProducts: Product[] = [];
 
+  // featured list shown on the page
+  featuredProducts: Product[] = [];
+
   // rendered list
   products: Product[] = [];
 
@@ -55,7 +58,10 @@ export class Catalog implements OnInit {
 
   ngOnInit(): void {
     const resolved = (this.route.snapshot.data['products'] as Product[]) ?? [];
+    const resolvedFeatured = (this.route.snapshot.data['featuredProducts'] as Product[]) ?? [];
+
     this.allProducts = resolved;
+    this.featuredProducts = resolvedFeatured;
     this.allBrands = this.extractBrands(this.allProducts);
     this.products = this.filterNow();
 
@@ -65,8 +71,28 @@ export class Catalog implements OnInit {
           this.allProducts = (list || []).filter(p => p.available !== false);
           this.allBrands = this.extractBrands(this.allProducts);
           this.products = this.filterNow();
+          // try to infer featured items from loaded products if none came from resolver
+          if (!this.featuredProducts.length) {
+            this.featuredProducts = this.allProducts.filter(p => (p as any).featured === true);
+          }
         },
         error: () => (this.errorMessage = 'We could not load the catalog right now. Please try again later.')
+      });
+    } else {
+      // If resolver provided products but not featured, infer from products
+      if (!this.featuredProducts.length) {
+        this.featuredProducts = this.allProducts.filter(p => (p as any).featured === true);
+      }
+    }
+    // If still no featured items, fetch featured explicitly (backend may support featured=true)
+    if (!this.featuredProducts.length) {
+      this.productService.getFeaturedProducts().subscribe({
+        next: list => {
+          this.featuredProducts = (list || []).filter(p => p.available !== false);
+        },
+        error: () => {
+          // silent fallback - template can still show "We will add featured cameras soon."
+        }
       });
     }
   }

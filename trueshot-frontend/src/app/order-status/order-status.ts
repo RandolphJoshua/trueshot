@@ -18,7 +18,7 @@ import {finalize} from 'rxjs';
   ],
 
   templateUrl: './order-status.html',
-  styleUrl: './order-status.css',
+  styleUrls: ['./order-status.css'],
 
 })
 export class OrderStatus {
@@ -38,8 +38,17 @@ export class OrderStatus {
     if (this.loading) {
       return;
     }
-    const trimmedId = this.searchOrderId.trim();
-    const trimmedEmail = this.searchEmail.trim();
+
+    // If an input is focused, blur it so ngModel commits the latest value.
+    const active = document?.activeElement as HTMLElement | null;
+    if (active && (active.tagName === 'INPUT' || active.tagName === 'TEXTAREA')) {
+      active.blur();
+    }
+
+    // Defer actual lookup to the next tick so ngModel updates after blur.
+    setTimeout(() => {
+      const trimmedId = this.searchOrderId.trim();
+      const trimmedEmail = this.searchEmail.trim();
 
     if (!trimmedId && !trimmedEmail) {
       this.errorMessage = 'Enter your order ID or the email you used during checkout.';
@@ -48,49 +57,49 @@ export class OrderStatus {
       return;
     }
 
-    if (trimmedId && isNaN(Number(trimmedId))) {
-      this.errorMessage = 'Order ID should contain numbers only.';
-      return;
-    }
+      if (trimmedId && isNaN(Number(trimmedId))) {
+        this.errorMessage = 'Order ID should contain numbers only.';
+        return;
+      }
 
-    this.loading = true;
-    this.errorMessage = '';
-    this.selectedOrder = null;
-    this.orders = [];
+      // Keep currently displayed order visible while loading so order# and status remain shown.
+      this.loading = true;
+      this.errorMessage = '';
 
-    if (trimmedId) {
-      const orderId = Number(trimmedId);
-      this.orderService.getOrderById(orderId).subscribe({
-        next: (order) => {
-          this.orders = order ? [order] : [];
-          this.selectedOrder = order ?? null;
+      if (trimmedId) {
+        const orderId = Number(trimmedId);
+        this.orderService.getOrderById(orderId).subscribe({
+          next: (order) => {
+            this.orders = order ? [order] : [];
+            this.selectedOrder = order ?? null;
+            if (!this.selectedOrder) {
+              this.errorMessage = 'Order not found.';
+            }
+            this.loading = false;
+          },
+          error: () => {
+            this.errorMessage = 'We could not find an order with that ID.';
+            this.loading = false;
+          }
+        });
+        return;
+      }
+
+      this.orderService.getOrdersByEmail(trimmedEmail.toLowerCase()).subscribe({
+        next: (orders) => {
+          this.orders = orders ?? [];
+          this.selectedOrder = this.orders[0] ?? null;
           if (!this.selectedOrder) {
-            this.errorMessage = 'Order not found.';
+            this.errorMessage = 'No orders found for that email address.';
           }
           this.loading = false;
         },
         error: () => {
-          this.errorMessage = 'We could not find an order with that ID.';
+          this.errorMessage = 'Something went wrong while looking up your orders.';
           this.loading = false;
         }
       });
-      return;
-    }
-
-    this.orderService.getOrdersByEmail(trimmedEmail.toLowerCase()).subscribe({
-      next: (orders) => {
-        this.orders = orders ?? [];
-        this.selectedOrder = this.orders[0] ?? null;
-        if (!this.selectedOrder) {
-          this.errorMessage = 'No orders found for that email address.';
-        }
-        this.loading = false;
-      },
-      error: () => {
-        this.errorMessage = 'Something went wrong while looking up your orders.';
-        this.loading = false;
-      }
-    });
+    }, 0);
   }
 
   // Ensure pressing Enter uses the latest ngModel value.
@@ -129,8 +138,18 @@ export class OrderStatus {
     return item.id ?? item.productId;
   }
 
+  // Return image path based on the item's product id (match catalog behavior).
+  getItemImage(item: OrderItem | null | undefined): string {
+    if (!item) return this.placeholderImage;
+    const id = (item as any).productId ?? null;
+    if (id == null) return this.placeholderImage;
+    return `assets/images/${id}.png`;
+  }
+
   onImgError(event: Event): void {
     const img = event.target as HTMLImageElement;
     img.src = this.placeholderImage;
   }
+
+
 }

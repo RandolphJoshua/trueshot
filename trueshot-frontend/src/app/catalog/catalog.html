@@ -5,51 +5,54 @@
     <!-- Filters -->
     <div class="card shadow-sm mb-4">
       <div class="card-body">
-        <div class="row g-3 align-items-end">
-          <!-- Search -->
-          <input
-            id="keyword"
-            name="keyword"
-            type="text"
-            class="form-control"
-            [(ngModel)]="searchKeyword"
-            (ngModelChange)="onSearchInput($event)"
-          (keyup.enter)="applyFilters()"
-          placeholder="Search by model or keywords"
-          />
-
-          <!-- Brand -->
-          <select
-            id="brand"
-            name="brand"
-            class="form-select"
-            [(ngModel)]="selectedBrand"
-            (ngModelChange)="onBrandChange($event)">
-          <option value="">All brands</option>
-          <option *ngFor="let brand of allBrands" [value]="brand">{{ brand }}</option>
-          </select>
-
-          <!-- Condition -->
-          <select
-            id="condition"
-            name="condition"
-            class="form-select"
-            [(ngModel)]="selectedCondition"
-            (ngModelChange)="onConditionChange($event)"
-          >
-          <option value="">Any condition</option>
-          <option *ngFor="let condition of conditions" [value]="condition">{{ condition }}</option>
-          </select>
-
+        <div class="row g-3 align-items-center">
+          <!-- Search (left) -->
+          <div class="col-12 col-md-4">
+            <input
+              id="keyword"
+              name="keyword"
+              type="text"
+              class="form-control"
+              [(ngModel)]="searchKeyword"
+              (ngModelChange)="onSearchInput($event)"
+              (keyup.enter)="applyFilters()"
+              placeholder="Search by model or keywords"
+            />
           </div>
-        </div>
 
-        <!-- Actions -->
-        <div class="d-flex gap-2 mt-3">
-          <button type="button" class="btn btn-primary" (click)="applyFilters()">Apply</button>
-          <button type="button" class="btn btn-outline-secondary" (click)="clearFilters()">Clear</button>
-          <div class="ms-auto small text-muted d-none d-md-block">
-            {{ products.length || 0 }} result(s)
+          <!-- Actions (center) -->
+          <div class="col-12 col-md-4 d-flex justify-content-center gap-2">
+            <button type="button" class="btn btn-primary" (click)="applyFilters()">Apply</button>
+            <button type="button" class="btn btn-outline-secondary" (click)="clearFilters()">Clear</button>
+          </div>
+
+          <!-- Filters (right) -->
+          <div class="col-12 col-md-4 d-flex gap-2 justify-content-end align-items-center">
+            <select
+              id="brand"
+              name="brand"
+              class="form-select w-auto"
+              [(ngModel)]="selectedBrand"
+              (ngModelChange)="onBrandChange($event)"
+            >
+              <option value="">All brands</option>
+              <option *ngFor="let brand of allBrands" [value]="brand">{{ brand }}</option>
+            </select>
+
+            <select
+              id="condition"
+              name="condition"
+              class="form-select w-auto"
+              [(ngModel)]="selectedCondition"
+              (ngModelChange)="onConditionChange($event)"
+            >
+              <option value="">Any condition</option>
+              <option *ngFor="let condition of conditions" [value]="condition">{{ condition }}</option>
+            </select>
+
+            <div class="small text-muted d-none d-md-block ms-3">
+              {{ products.length || 0 }} result(s)
+            </div>
           </div>
         </div>
       </div>
@@ -109,14 +112,14 @@
       No products found.
     </p>
 
-  <!-- Toasts (top-right) -->
-  <div class="ts-toast-container" aria-live="polite" aria-atomic="true">
-    <div class="ts-toast shadow" *ngFor="let t of toasts" (click)="removeToast(t.id)">
-      <div class="ts-toast-body">
-        <i class="bi bi-check-circle-fill me-2"></i>
-        {{ t.text }}
+    <!-- Toasts (top-right) -->
+    <div class="ts-toast-container" aria-live="polite" aria-atomic="true">
+      <div class="ts-toast shadow" *ngFor="let t of toasts" (click)="removeToast(t.id)">
+        <div class="ts-toast-body">
+          <i class="bi bi-check-circle-fill me-2"></i>
+          {{ t.text }}
+        </div>
       </div>
     </div>
   </div>
-
 </section>

@@ -113,9 +113,13 @@
           <div class="card-body p-4 p-md-5">
             <h5 class="fw-semibold mb-3">Reach us directly</h5>
             <ul class="list-unstyled mb-4">
-              <li class="mb-2"><strong>Email:</strong> support@trueshot.local</li>
-              <li class="mb-2"><strong>Phone:</strong> +63-900-123-4567</li>
-              <li class="mb-0"><strong>Hours:</strong> Mon–Fri, 9:00–18:00 (PHT)</li>
+              <li class="mb-2"><strong>Email:</strong>
+                <a [href]="'mailto:' + supportEmail" class="footer-link">{{ supportEmail }}</a>
+              </li>
+              <li class="mb-2"><strong>Phone:</strong>
+                <a [href]="'tel:' + supportPhone" class="footer-link">{{ supportPhone }}</a>
+              </li>
+              <li class="mb-0"><strong>Hours:</strong> {{ hours }}</li>
             </ul>
 
             <div class="ratio ratio-16x9 rounded overflow-hidden bg-light">
