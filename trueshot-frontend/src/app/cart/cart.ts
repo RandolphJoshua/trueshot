@@ -93,7 +93,6 @@ export class Cart implements OnInit, OnDestroy {
     });
   }
 
-  /** Builds product image URL based on product id */
   getProductImage(id: number | null | undefined): string {
     if (id == null) {
       return 'assets/images/placeholder-camera.jpg';
@@ -101,7 +100,6 @@ export class Cart implements OnInit, OnDestroy {
     return `assets/images/${id}.png`;
   }
 
-  /** Replaces broken images with a fallback */
   onImgError(event: Event): void {
     const img = event.target as HTMLImageElement;
     img.src = 'assets/images/placeholder-camera.jpg';

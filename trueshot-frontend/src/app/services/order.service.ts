@@ -12,4 +12,8 @@ export class OrderService {
   checkout(request: CheckoutRequest): Observable<any> {
     return this.http.post(`${this.ordersUrl}/checkout`, request);
   }
+
+  getOrderbyId(id: number): Observable<any> {
+    return this.http.get(`${this.ordersUrl}/${id}`);
+  }
 }
